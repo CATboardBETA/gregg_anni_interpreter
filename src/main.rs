@@ -25,8 +25,50 @@ fn main() {
 // Train the model from the dataset (src/data/data_as.csv)
 // Implemented using linfa.
 fn train() {
-
 }
+
+/// Simply flips a few images vertically to save time in drawing them. This should be run only once
+/// after each time the images change.
+/// Generates:
+/// - src/data/r1.png
+/// - src/data/r2.png
+/// - src/data/r3.png
+/// - src/data/r4.png
+/// - src/data/r5.png
+/// - src/data/r6.png
+/// - src/data/r7.png
+/// - src/data/r8.png
+/// - src/data/r9.png
+/// - src/data/r10.png
+/// from src/data/1.png, src/data/2.png, ..., src/data/10.png (the K-strokes)
+///
+/// And generates
+/// - src/data/l1.png
+/// - src/data/l2.png
+/// - src/data/l3.png
+/// - src/data/l4.png
+/// - src/data/l5.png
+/// - src/data/l6.png
+/// - src/data/l7.png
+/// - src/data/l8.png
+/// - src/data/l9.png
+/// - src/data/l10.png
+/// from src/data/g1.png, src/data/g2.png, ..., src/data/g10.png (the G-strokes)
+fn generate_strokes() {
+    for i in 1..=10 {
+        let img = image::open(format!("src/data/{i}.png")).unwrap();
+        let img = img.to_luma_alpha8();
+        let flipped = imageops::flip_vertical(&img);
+        flipped.save(format!("src/data/r{i}.png")).unwrap();
+    }
+    for i in 1..=10 {
+        let img = image::open(format!("src/data/g{i}.png")).unwrap();
+        let img = img.to_luma_alpha8();
+        let flipped = imageops::flip_vertical(&img);
+        flipped.save(format!("src/data/l{i}.png")).unwrap();
+    }
+}
+
 const IMAGE_PATHS: [&str; 20] = [
     "src/data/1.png",
     "src/data/2.png",
