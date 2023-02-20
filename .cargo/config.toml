@@ -1,0 +1,5 @@
+[env]
+LIBTORCH = { value = "torch_libtorch/" , relative = true }
+# Don't know which is right, TODO: test which one is needed
+DYLD_LIBRARY_PATH = { value = "torch_ld_library_path/" , relative = true }
+LD_LIBRARY_PATH = { value = "torch_ld_library_path/" , relative = true }
