@@ -1,12 +1,17 @@
 use csv::Reader;
 use image::{imageops, GrayAlphaImage};
 
+use ndarray::Array2;
+
+use ndarray::Axis;
 use std::env;
 use std::fs::File;
-use ndarray::{Array, Array1, Array2};
+use tch::{nn, Device};
 
 mod macros;
 pub use macros::*;
+
+type InitialDataset = (Array2<String>, Array2<u8>);
 
 //noinspection SpellCheckingInspection
 fn main() {
@@ -17,14 +22,49 @@ fn main() {
         "train" => train(),
         _ => {
             // TODO: Add more options
-            println!("Usage: gregg_anni_interpreter [genstrokes|generate|load]");
+            println!("Usage: gregg_anni_interpreter [genstrokes|generate|train]");
         }
     }
 }
 
+// // Layout of the neural network: 1 input layer, 1 hidden layer, 1 output layer. Input layer has
+// pub struct InitialIdentificationCnn {
+//     conv1
+// }
+
 // Train the model from the dataset (src/data/data_as.csv)
-// Implemented using linfa.
+// Implemented using tch-rs
 fn train() {
+    let mut reader = Reader::from_path("src/data/data_as.csv").unwrap();
+    let (imgs, datas) = load_initial_dataset(&mut reader);
+    let data = imgs.into_iter().zip(datas.into_iter());
+
+    let vs = nn::VarStore::new(Device::cuda_if_available());
+    // let net = InitialIdentificationCnn::new(&vs.root());
+}
+
+fn load_initial_dataset(reader: &mut Reader<File>) -> InitialDataset {
+    let mut data = Array2::default((0, reader.headers().unwrap().len()));
+    for record in reader.records() {
+        let record = record.expect("Failed to read record");
+        let mut row = Vec::new();
+        for field in record.iter() {
+            row.push(field.to_owned());
+        }
+        data.append(
+            Axis(0),
+            Array2::from_shape_vec((1, row.len()), row).unwrap().view(),
+        )
+        .expect("Failed to append row to loaded dataset");
+    }
+
+    // Split into first column and the rest
+    let (img, rest) = data.view().split_at(Axis(1), 1);
+
+    // Convert the rest to an array of u8s
+    let rest = rest.mapv(|x| x.parse::<u8>().unwrap());
+
+    (img.to_owned(), rest.to_owned())
 }
 
 /// Simply flips a few images vertically to save time in drawing them. This should be run only once
@@ -208,6 +248,7 @@ fn get_surrounding_brightness(img: &GrayAlphaImage, x: u32, y: u32) -> u8 {
     for pixel in surrounding_pixels.iter() {
         // If the pixel is transparent, don't count it
         if pixel[1] == 0 {
+            surrounding_pixels_counted += 1;
             continue;
         }
         // Add the brightness to the total

@@ -9,9 +9,9 @@ run these commands:
 ```shell
 cd libtorch/include/torch
 mkdir include
+mkdir lib
 mv *.h include
 mv csrc include/csrc
 cd ../../lib
-mkdir lib
-mv *.so lib
+mv *.so ../../include/
 ```

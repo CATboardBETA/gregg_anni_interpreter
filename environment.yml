@@ -1,0 +1,9 @@
+name: gregg_anni_interpreter
+channels:
+  - pytorch
+  - conda-forge
+dependencies:
+  - python=3.8
+  - pytorch
+  - torchvision
+  - torchaudio
