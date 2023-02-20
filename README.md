@@ -10,6 +10,7 @@ run these commands:
 cd libtorch/include/torch
 mkdir include
 mv *.h include
+mv csrc include/csrc
 cd ../../lib
 mkdir lib
 mv *.so lib
