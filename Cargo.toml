@@ -6,7 +6,9 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+anyhow = "1.0.69"
 ndarray = "0.15.6"
 csv = "1.1.6"
 image = "0.24.5"
-tch = "0.10.2"
+tch = { version = "0.10.2"}
+torch-sys = "0.10.2"

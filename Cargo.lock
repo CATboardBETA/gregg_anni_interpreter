@@ -352,10 +352,12 @@ dependencies = [
 name = "gregg_anni_interpreter"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "csv",
  "image",
  "ndarray",
  "tch",
+ "torch-sys",
 ]
 
 [[package]]
