@@ -1,5 +1,0 @@
-[env]
-LIBTORCH = { value = "libtorch/" , relative = true }
-# Don't know which is right, TODO: test which one is needed
-DYLD_LIBRARY_PATH = { value = "libtorch/lib" , relative = true }
-LD_LIBRARY_PATH = { value = "libtorch/lib" , relative = true }
